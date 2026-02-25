@@ -357,11 +357,15 @@ fn main() {
     // Plot training progress
     println!("\nGenerating training graphs...");
     plot_training_progress(&loss_history, &accuracy_history).expect("Failed to create plots");
-    println!("Saved: training_progress.png");
+    println!("Saved: images/training_progress.png");
 }
 
 fn plot_training_progress(loss_history: &[f32], accuracy_history: &[f32]) -> Result<()> {
-    let root = BitMapBackend::new("training_progress.png", (1200, 500)).into_drawing_area();
+    // Create images directory if it doesn't exist
+    std::fs::create_dir_all("images")
+        .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e.to_string()))?;
+    
+    let root = BitMapBackend::new("images/training_progress.png", (1200, 500)).into_drawing_area();
     root.fill(&WHITE)
         .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e.to_string()))?;
 

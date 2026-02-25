@@ -7,6 +7,7 @@ Requires: numpy, matplotlib, gzip
 import gzip
 import numpy as np
 import matplotlib.pyplot as plt
+import os
 
 
 def load_mnist_images(filename):
@@ -25,6 +26,9 @@ def load_mnist_labels(filename):
 
 def visualize_samples(images, labels, num_samples=20):
     """Visualize MNIST samples in a grid"""
+    # Create images directory if it doesn't exist
+    os.makedirs("images", exist_ok=True)
+    
     fig, axes = plt.subplots(2, 10, figsize=(15, 3))
     fig.suptitle("MNIST Dataset Samples", fontsize=16, fontweight="bold")
 
@@ -35,8 +39,8 @@ def visualize_samples(images, labels, num_samples=20):
             ax.axis("off")
 
     plt.tight_layout()
-    plt.savefig("mnist_samples.png", dpi=150, bbox_inches="tight")
-    print("Saved: mnist_samples.png")
+    plt.savefig("images/mnist_samples.png", dpi=150, bbox_inches="tight")
+    print("Saved: images/mnist_samples.png")
 
 
 def main():

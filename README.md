@@ -21,7 +21,7 @@ MNIST is a classic dataset with 70,000 images of handwritten digits:
 
 ### What the digits look like
 
-![MNIST Samples](mnist_samples.png)
+![MNIST Samples](images/mnist_samples.png)
 
 Pretty straightforward - just grayscale images of people's handwriting.
 
@@ -52,7 +52,7 @@ Training setup:
 
 ### Training Progress
 
-![Training Progress](training_progress.png)
+![Training Progress](images/training_progress.png)
 
 The network learns pretty quickly! Loss drops fast in the first few epochs, then gradually improves.
 
@@ -65,6 +65,20 @@ Final test: 97.5% on unseen digits
 ```
 
 So it correctly identifies about 9,750 out of 10,000 handwritten digits it's never seen before.
+
+## Getting Started
+
+### Train the Model
+
+```bash
+# Download MNIST dataset
+./download_mnist.sh
+
+# Train the model
+cargo run --release
+```
+
+After training, the model will be saved to the `model/` directory.
 
 ## The Code
 
