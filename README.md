@@ -1,3 +1,16 @@
+---
+language: en
+license: mit
+tags:
+  - mnist
+  - rust
+  - neural-network
+  - image-classification
+datasets:
+  - mnist
+pipeline_tag: image-classification
+---
+
 # MNIST Neural Network in Rust 🦀
 
 A fun side project where I built a neural network from scratch in Rust to recognize handwritten digits!
