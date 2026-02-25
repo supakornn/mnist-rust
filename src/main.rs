@@ -3,8 +3,7 @@ use ndarray::{Array1, Array2, Axis};
 use plotters::prelude::*;
 use rand::Rng;
 use std::fs::File;
-use std::io::{Read, Result, Write};
-use serde::{Deserialize, Serialize};
+use std::io::{Read, Result};
 use ndarray_npy::{write_npy, read_npy};
 
 // MNIST data loader
@@ -66,7 +65,6 @@ impl MnistData {
 }
 
 // Neural Network
-#[derive(Serialize, Deserialize)]
 struct NeuralNetwork {
     weights1: Array2<f32>,
     bias1: Array1<f32>,
@@ -273,6 +271,7 @@ impl NeuralNetwork {
         Ok(())
     }
 
+    #[allow(dead_code)]
     fn load(path: &str) -> Result<Self> {
         println!("Loading model from {}...", path);
         
