@@ -3,7 +3,9 @@ use ndarray::{Array1, Array2, Axis};
 use plotters::prelude::*;
 use rand::Rng;
 use std::fs::File;
-use std::io::{Read, Result};
+use std::io::{Read, Result, Write};
+use serde::{Deserialize, Serialize};
+use ndarray_npy::{write_npy, read_npy};
 
 // MNIST data loader
 struct MnistData {
@@ -64,6 +66,7 @@ impl MnistData {
 }
 
 // Neural Network
+#[derive(Serialize, Deserialize)]
 struct NeuralNetwork {
     weights1: Array2<f32>,
     bias1: Array1<f32>,
@@ -233,6 +236,63 @@ impl NeuralNetwork {
 
         100.0 * correct as f32 / labels.len() as f32
     }
+
+    fn save(&self, path: &str) -> Result<()> {
+        println!("Saving model to {}...", path);
+        
+        // Create directory if it doesn't exist
+        std::fs::create_dir_all(path)
+            .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e.to_string()))?;
+        
+        // Save weights and biases as .npy files (numpy format)
+        write_npy(format!("{}/weights1.npy", path), &self.weights1)
+            .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e.to_string()))?;
+        write_npy(format!("{}/bias1.npy", path), &self.bias1)
+            .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e.to_string()))?;
+        write_npy(format!("{}/weights2.npy", path), &self.weights2)
+            .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e.to_string()))?;
+        write_npy(format!("{}/bias2.npy", path), &self.bias2)
+            .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e.to_string()))?;
+        
+        // Save model config as JSON
+        let config = serde_json::json!({
+            "model_type": "mnist_classifier",
+            "architecture": {
+                "input_size": self.weights1.nrows(),
+                "hidden_size": self.weights1.ncols(),
+                "output_size": self.weights2.ncols(),
+            },
+            "framework": "rust_from_scratch",
+        });
+        
+        let config_file = File::create(format!("{}/config.json", path))?;
+        serde_json::to_writer_pretty(config_file, &config)
+            .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e.to_string()))?;
+        
+        println!("Model saved successfully!");
+        Ok(())
+    }
+
+    fn load(path: &str) -> Result<Self> {
+        println!("Loading model from {}...", path);
+        
+        let weights1: Array2<f32> = read_npy(format!("{}/weights1.npy", path))
+            .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e.to_string()))?;
+        let bias1: Array1<f32> = read_npy(format!("{}/bias1.npy", path))
+            .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e.to_string()))?;
+        let weights2: Array2<f32> = read_npy(format!("{}/weights2.npy", path))
+            .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e.to_string()))?;
+        let bias2: Array1<f32> = read_npy(format!("{}/bias2.npy", path))
+            .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e.to_string()))?;
+        
+        println!("Model loaded successfully!");
+        Ok(NeuralNetwork {
+            weights1,
+            bias1,
+            weights2,
+            bias2,
+        })
+    }
 }
 
 // Import the s! macro for slicing
@@ -290,6 +350,10 @@ fn main() {
     println!("\nEvaluating on test set...");
     let test_accuracy = nn.test(&test_data.images, &test_data.labels);
     println!("Test Accuracy: {:.2}%", test_accuracy);
+
+    // Save the trained model
+    println!();
+    nn.save("model").expect("Failed to save model");
 
     // Plot training progress
     println!("\nGenerating training graphs...");
