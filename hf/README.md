@@ -34,6 +34,7 @@ Epoch 10: ~99% train / 97.5% test
 ```
 
 ![Training Progress](images/training_progress.png)
+![MNIST Samples](images/mnist_samples.png)
 
 ## Usage
 
