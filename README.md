@@ -1,17 +1,6 @@
----
-language: en
-license: mit
-tags:
-  - mnist
-  - rust
-  - neural-network
-  - image-classification
-datasets:
-  - mnist
-pipeline_tag: image-classification
----
+# MNIST Neural Network in Rust
 
-# MNIST Neural Network in Rust 🦀
+[![Hugging Face](https://img.shields.io/badge/🤗%20Hugging%20Face-Model-yellow)](https://huggingface.co/supakornn/mnist-rust)
 
 A fun side project where I built a neural network from scratch in Rust to recognize handwritten digits!
 
