@@ -10,7 +10,7 @@ visualize:
 
 push-github:
 	git add .
-	git commit -m "$(msg)"
+	git commit -m "$(if $(msg),$(msg),chore: update)"
 	git push
 
 push-hf:

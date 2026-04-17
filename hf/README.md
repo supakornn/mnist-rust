@@ -46,4 +46,4 @@ cargo run --release
 
 ## Source
 
-[GitHub →](https://github.com/supakorn/mnist-rust)
+[![GitHub](https://img.shields.io/badge/GitHub-supakornn%2Fmnist--rust-black?logo=github)](https://github.com/supakornn/mnist-rust)
